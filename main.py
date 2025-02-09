@@ -5,7 +5,7 @@ from tweety import TwitterAsync
 app = TwitterAsync("session")
 
 # Load accounts dynamically from JSON file
-accounts_file = "accounts.json"
+accounts_file = "docs/accounts.json"
 accounts = load_accounts_from_json(accounts_file)
 max_attempts = len(accounts)
 
