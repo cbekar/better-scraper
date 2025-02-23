@@ -35,8 +35,8 @@ async def call_api(account, query):
 
 async def main():
     global app
-    date_start = list_exported_xlsx_files("2018-01-01")
-    date_end = "2018-04-01"
+    date_start = list_exported_xlsx_files("2020-12-02")
+    date_end = "2020-12-03"
     dates = date_range_pandas(date_start, date_end)
     i = 1
     for date_left, date_right in zip(dates[:-1], dates[1:]):
@@ -46,7 +46,7 @@ async def main():
         start_time = time.perf_counter()
         while attempt < max_attempts:
             current_account = accounts[0]  # Listenin ilk elemanını seç
-            query = ("from:dikencomtr include:nativeretweets -filter:replies since:" +
+            query = ("from:vaziyetcomtr include:nativeretweets -filter:replies since:" +
                      pd.to_datetime(date_left).strftime("%Y-%m-%d") + " until:" +
                      pd.to_datetime(date_right).strftime("%Y-%m-%d"))
             print(query)

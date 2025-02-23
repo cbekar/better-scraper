@@ -2,6 +2,34 @@ from tweety.types.twDataTypes import Excel
 from tweety.utils import iterable_to_string
 import json, datetime
 from collections import deque
+import pandas as pd
+
+def get_names_from_excel(file_path):
+    """
+    Extracts names from the first column of an Excel file.
+
+    :param file_path: Path to the Excel file.
+    :return: List of names from the first column.
+    """
+    try:
+        # Read the Excel file
+        df = pd.read_excel(file_path)
+
+        # Extract the first column
+        names = df.iloc[:, 0].dropna().tolist()
+
+        return names
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
+
+def which_AKP(text):
+    excel_file = "docs/AKP_actors.xlsx"
+    names = get_names_from_excel(excel_file)
+    for name in names:
+        if name in text:
+            return name
+    return "[]"
 
 class MyExcel(Excel):
     def _write_tweet(self, tweet):
@@ -23,6 +51,7 @@ class MyExcel(Excel):
         self.worksheet[f'O{self.max_row + 1}'] = iterable_to_string(tweet.user_mentions, ",", "screen_name")
         self.worksheet[f'P{self.max_row + 1}'] = iterable_to_string(tweet.urls, ",", "expanded_url")
         self.worksheet[f'R{self.max_row + 1}'] = iterable_to_string(tweet.hashtags, ",", "text")
+        self.worksheet[f'S{self.max_row + 1}'] = which_AKP(tweet.text)
         self.max_row += 1
 
     def _set_headers(self):
@@ -55,6 +84,7 @@ def extract_user_data(user):
         "Fast Followers Count": user.fast_followers_count,
         "Listed Count": user.listed_count,
         "Media Count": user.media_count,
+        "AKP_list": user.is_akp_list,
     }
 
 
